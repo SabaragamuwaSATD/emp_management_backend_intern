@@ -5,6 +5,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const setupSwagger = require("./configs/swaggerConfig");
+const empRoutes = require("./routes/empRoutes");
 
 app.use(cookieParser()); // for parsing cookies
 app.use(express.json()); // for parsing application/json
@@ -18,6 +19,8 @@ setupSwagger(app);
 app.get("/", (req, res) => {
   res.send("Photographer Backend API");
 });
+
+app.use("/api/v1/employees", empRoutes);
 
 // Handle errors (404, etc.)
 app.use((req, res, next) => {
