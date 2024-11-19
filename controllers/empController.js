@@ -42,6 +42,28 @@ exports.getAllEmployees = async (req, res, next) => {
   }
 };
 
+//Get Employee by ID
+exports.getEmployeeById = async (req, res, next) => {
+  try {
+    const empId = req.params.id;
+    const employee = await Employee.findById(empId);
+
+    if (!employee) {
+      return res.status(404).json({
+        success: false,
+        message: "Employee not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: employee,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 //Delete Employee
 exports.deleteEmployee = async (req, res, next) => {
   try {
