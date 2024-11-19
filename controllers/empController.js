@@ -64,6 +64,54 @@ exports.getEmployeeById = async (req, res, next) => {
   }
 };
 
+// update Employee
+exports.updateEmployee = async (req, res, next) => {
+  try {
+    const empId = req.params.id;
+    const existingData = await Employee.findById(empId);
+
+    if (!existingData) {
+      return res.status(404).json({
+        success: false,
+        message: "Employee not found",
+      });
+    }
+
+    let newPhoto = existingData.photo;
+
+    if (req.file) {
+      if (existingData.photo && existingData.photo.public_id) {
+        await cloudinary.uploader.destroy(existingData.photo.public_id);
+      }
+      newPhoto = {
+        url: req.file.path,
+        public_id: req.file.filename,
+      };
+    }
+
+    const updatedData = {
+      ...req.body,
+      photo: newPhoto,
+    };
+
+    const updatedEmployee = await Employee.findByIdAndUpdate(
+      empId,
+      updatedData,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    res.status(200).json({
+      success: true,
+      data: updatedEmployee,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 //Delete Employee
 exports.deleteEmployee = async (req, res, next) => {
   try {
