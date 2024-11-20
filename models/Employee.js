@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const employeeSchema = new mongoose.Schema({
+  employeeId: {
+    type: String,
+    required: true,
+  },
   photo: {
     public_id: { type: String },
     url: { type: String },
