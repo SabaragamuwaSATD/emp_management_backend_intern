@@ -36,16 +36,16 @@ const employeeSchema = new mongoose.Schema({
   jobRole: {
     type: String,
     required: true,
-    enum: [
-      "Fullstack Developer",
-      "Frontend Developer",
-      "Backend Developer",
-      "Director",
-      "Manager",
-      "CEO",
-      "UI/UX Designer",
-      "Project Manager",
-    ],
+    // enum: [
+    //   "Fullstack Developer",
+    //   "Frontend Developer",
+    //   "Backend Developer",
+    //   "Director",
+    //   "Manager",
+    //   "CEO",
+    //   "UI/UX Designer",
+    //   "Project Manager",
+    // ],
   },
   startWorkDate: {
     type: Date,

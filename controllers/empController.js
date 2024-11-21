@@ -5,12 +5,41 @@ const { upload, cloudinary } = require("../configs/cloudinaryConfig");
 // add Employee
 exports.addEmployee = async (req, res, next) => {
   try {
+    const {
+      employeeId,
+      name,
+      address,
+      telNo,
+      dob,
+      nic,
+      bankNo,
+      bankName,
+      jobRole,
+      startWorkDate,
+      endWorkDate,
+    } = req.body;
+
+    // Check if the photo is provided
+    if (!req.file) {
+      return res.status(400).json({ message: "Photo is required" });
+    }
+
     const newEmployee = new Employee({
-      ...req.body,
+      employeeId,
       photo: {
         url: req.file.path,
         public_id: req.file.filename,
       },
+      name,
+      address,
+      telNo,
+      dob: new Date(dob),
+      nic,
+      bankNo,
+      bankName,
+      jobRole,
+      startWorkDate: new Date(startWorkDate),
+      endWorkDate: new Date(endWorkDate),
     });
     await newEmployee.save();
     res.status(201).json({
