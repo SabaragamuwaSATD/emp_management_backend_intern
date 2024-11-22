@@ -13,9 +13,20 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: {
-    allowed_formats: ["jpg", "png", "mp4", "jpeg"],
-    resource_type: "auto",
+  params: async (req, file) => {
+    if (file.mimetype === "application/pdf") {
+      return {
+        folder: "pdfs",
+        format: "pdf",
+        resource_type: "auto",
+      };
+    } else {
+      return {
+        folder: "images",
+        format: file.mimetype.split("/")[1],
+        resource_type: "auto",
+      };
+    }
   },
 });
 

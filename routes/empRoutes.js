@@ -6,7 +6,7 @@ const {
   getEmployeeById,
   updateEmployee,
 } = require("../controllers/empController");
-const { upload } = require("../configs/cloudinaryConfig");
+const { uploadImageVideo, upload } = require("../configs/cloudinaryConfig");
 const router = express.Router();
 
 router.post("/add", upload.single("photo"), addEmployee);

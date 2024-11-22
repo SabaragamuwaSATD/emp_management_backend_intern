@@ -6,6 +6,7 @@ const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const setupSwagger = require("./configs/swaggerConfig");
 const empRoutes = require("./routes/empRoutes");
+const clientRoutes = require("./routes/clientRoutes");
 
 app.use(cookieParser()); // for parsing cookies
 app.use(express.json()); // for parsing application/json
@@ -21,6 +22,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/employees", empRoutes);
+app.use("/api/v1/clients", clientRoutes);
 
 // Handle errors (404, etc.)
 app.use((req, res, next) => {

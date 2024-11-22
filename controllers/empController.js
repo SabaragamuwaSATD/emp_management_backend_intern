@@ -142,10 +142,35 @@ exports.updateEmployee = async (req, res, next) => {
 };
 
 //Delete Employee
+// exports.deleteEmployee = async (req, res, next) => {
+//   try {
+//     const empId = req.params.id;
+//     const employee = await Employee.findByIdAndDelete(empId);
+
+//     if (!employee) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Employee not found",
+//       });
+//     }
+
+//     await cloudinary.uploader.destroy(employee.photo.public_id);
+//     res.status(200).json({
+//       success: true,
+//       message: "Employee deleted successfully",
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+// Frime's code
 exports.deleteEmployee = async (req, res, next) => {
   try {
     const empId = req.params.id;
-    const employee = await Employee.findByIdAndDelete(empId);
+
+    // Match by custom employee ID field
+    const employee = await Employee.findOneAndDelete({ employeeId: empId });
 
     if (!employee) {
       return res.status(404).json({
@@ -154,12 +179,17 @@ exports.deleteEmployee = async (req, res, next) => {
       });
     }
 
-    await cloudinary.uploader.destroy(employee.photo.public_id);
+    // Check if photo exists before deleting from Cloudinary
+    if (employee.photo && employee.photo.public_id) {
+      await cloudinary.uploader.destroy(employee.photo.public_id);
+    }
+
     res.status(200).json({
       success: true,
       message: "Employee deleted successfully",
     });
   } catch (error) {
+    console.error("Error deleting employee:", error.message);
     next(error);
   }
 };

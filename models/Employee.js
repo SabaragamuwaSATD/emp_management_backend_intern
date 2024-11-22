@@ -33,6 +33,10 @@ const employeeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  bankName: {
+    type: String,
+    required: true,
+  },
   jobRole: {
     type: String,
     required: true,

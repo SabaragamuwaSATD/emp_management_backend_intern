@@ -5,7 +5,7 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "PhotoGrapher API",
+      title: "Photographer API",
       version: "1.0.0",
       description: "API documentation for the Photographer application",
     },
@@ -16,86 +16,126 @@ const options = {
     ],
     tags: [
       {
-        name: "User",
-        description: "Endpoints related to users",
-      },
-      {
-        name: "Auth",
-        description: "Endpoints related to authentication",
+        name: "Client",
+        description: "Endpoints related to clients",
       },
     ],
     components: {
       schemas: {
-        User: {
+        Client: {
           type: "object",
+          required: [
+            "clientID",
+            "clientName",
+            "clientAddress",
+            "clientContactNumber",
+            "idNumber",
+            "bankNumber",
+            "bankName",
+            "companyName",
+            "projectName",
+            "startProjectDate",
+            "endProjectDate",
+            "agreement",
+          ],
           properties: {
-            userId: {
+            clientID: {
               type: "string",
-              description: "Unique identifier for the user",
+              description: "Unique identifier for the client",
             },
-            name: {
-              type: "string",
-              description: "Name of the user",
-              minLength: 3,
-              maxLength: 50,
-            },
-            email: {
-              type: "string",
-              description: "Email address of the user",
-              format: "email",
-            },
-            password: {
-              type: "string",
-              description: "Password for the user (required for admin)",
-              minLength: 6,
-            },
-            role: {
-              type: "string",
-              description: "Role of the user",
-              enum: ["client", "admin"],
-              default: "client",
-            },
-            profileImage: {
+            clientPhoto: {
               type: "object",
               properties: {
-                public_id: { type: "string" },
-                url: { type: "string" },
+                public_id: {
+                  type: "string",
+                  description: "Public ID of the client photo in Cloudinary",
+                },
+                url: {
+                  type: "string",
+                  description: "URL of the client photo in Cloudinary",
+                },
               },
             },
-            phone: { type: "string" },
-            address: { type: "string" },
-            birthDate: { type: "string" },
-            brideMau: { type: "string" },
-            weddingPlanner: { type: "string" },
-            weddingDate: { type: "string" },
-            createdAt: {
+            clientName: {
               type: "string",
-              format: "date-time",
-              description: "Timestamp when the user was created",
+              description: "Name of the client",
             },
-            resetPasswordOTP: { type: "string" },
-            resetPasswordExpires: { type: "string", format: "date-time" },
-            otpVerified: {
-              type: "boolean",
-              default: false,
+            clientAddress: {
+              type: "string",
+              description: "Address of the client",
             },
-          },
-        },
-        Auth: {
-          type: "object",
-          properties: {
-            email: { type: "string" },
-            password: { type: "string" },
+            clientContactNumber: {
+              type: "string",
+              description: "Contact number of the client",
+            },
+            idNumber: {
+              type: "string",
+              description: "Identification number of the client",
+            },
+            bankNumber: {
+              type: "string",
+              description: "Bank account number of the client",
+            },
+            bankName: {
+              type: "string",
+              description: "Bank name of the client",
+            },
+            companyName: {
+              type: "string",
+              description: "Company name of the client",
+            },
+            projectName: {
+              type: "string",
+              description: "Project name associated with the client",
+            },
+            projectLogo: {
+              type: "object",
+              properties: {
+                public_id: {
+                  type: "string",
+                  description: "Public ID of the project logo in Cloudinary",
+                },
+                url: {
+                  type: "string",
+                  description: "URL of the project logo in Cloudinary",
+                },
+              },
+            },
+            startProjectDate: {
+              type: "string",
+              format: "date",
+              description: "Start date of the project",
+            },
+            endProjectDate: {
+              type: "string",
+              format: "date",
+              description: "End date of the project",
+            },
+            agreement: {
+              type: "object",
+              properties: {
+                public_id: {
+                  type: "string",
+                  description: "Public ID of the agreement in Cloudinary",
+                },
+                url: {
+                  type: "string",
+                  description: "URL of the agreement in Cloudinary",
+                },
+              },
+            },
           },
         },
       },
     },
   },
-  apis: ["./routes/*.js"],
+  apis: ["./routes/*.js"], // Path to the API routes
 };
 
 const swaggerSpec = swaggerJSDoc(options);
 
-module.exports = (app) => {
+const setupSwagger = (app) => {
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 };
+
+module.exports = setupSwagger;
