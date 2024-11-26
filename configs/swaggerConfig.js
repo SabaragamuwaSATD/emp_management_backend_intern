@@ -5,9 +5,9 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "Photographer API",
+      title: "Management API",
       version: "1.0.0",
-      description: "API documentation for the Photographer application",
+      description: "API documentation for the management system",
     },
     servers: [
       {
@@ -18,6 +18,10 @@ const options = {
       {
         name: "Client",
         description: "Endpoints related to clients",
+      },
+      {
+        name: "Partner",
+        description: "Endpoints related to partners",
       },
     ],
     components: {
@@ -48,18 +52,12 @@ const options = {
               properties: {
                 public_id: {
                   type: "string",
-                  description: "Public ID of the client photo in Cloudinary",
+                  description: "Cloudinary public ID",
                 },
-                url: {
-                  type: "string",
-                  description: "URL of the client photo in Cloudinary",
-                },
+                url: { type: "string", description: "Cloudinary URL" },
               },
             },
-            clientName: {
-              type: "string",
-              description: "Name of the client",
-            },
+            clientName: { type: "string", description: "Name of the client" },
             clientAddress: {
               type: "string",
               description: "Address of the client",
@@ -93,12 +91,9 @@ const options = {
               properties: {
                 public_id: {
                   type: "string",
-                  description: "Public ID of the project logo in Cloudinary",
+                  description: "Cloudinary public ID",
                 },
-                url: {
-                  type: "string",
-                  description: "URL of the project logo in Cloudinary",
-                },
+                url: { type: "string", description: "Cloudinary URL" },
               },
             },
             startProjectDate: {
@@ -116,13 +111,89 @@ const options = {
               properties: {
                 public_id: {
                   type: "string",
-                  description: "Public ID of the agreement in Cloudinary",
+                  description: "Cloudinary public ID",
                 },
-                url: {
-                  type: "string",
-                  description: "URL of the agreement in Cloudinary",
-                },
+                url: { type: "string", description: "Cloudinary URL" },
               },
+            },
+          },
+        },
+        Partner: {
+          type: "object",
+          required: [
+            "partnerId",
+            "partnerName",
+            "partnerOfficeAddress",
+            "partnerContactNumber",
+            "bankNumber",
+            "bankName",
+            "nicNumber",
+            "companyName",
+            "reason",
+          ],
+          properties: {
+            partnerId: {
+              type: "string",
+              description: "Unique identifier for the partner",
+            },
+            partnerName: { type: "string", description: "Name of the partner" },
+            partnerOfficeAddress: {
+              type: "string",
+              description: "Office address of the partner",
+            },
+            partnerContactNumber: {
+              type: "string",
+              description: "Contact number of the partner",
+            },
+            bankNumber: {
+              type: "string",
+              description: "Bank account number of the partner",
+            },
+            bankName: {
+              type: "string",
+              description: "Bank name of the partner",
+            },
+            nicNumber: {
+              type: "string",
+              description: "NIC number of the partner",
+            },
+            partnerPhoto: {
+              type: "object",
+              properties: {
+                public_id: {
+                  type: "string",
+                  description: "Cloudinary public ID",
+                },
+                url: { type: "string", description: "Cloudinary URL" },
+              },
+            },
+            companyName: {
+              type: "string",
+              description: "Company name of the partner",
+            },
+            agreement: {
+              type: "object",
+              properties: {
+                public_id: {
+                  type: "string",
+                  description: "Cloudinary public ID",
+                },
+                url: { type: "string", description: "Cloudinary URL" },
+              },
+            },
+            companyLogo: {
+              type: "object",
+              properties: {
+                public_id: {
+                  type: "string",
+                  description: "Cloudinary public ID",
+                },
+                url: { type: "string", description: "Cloudinary URL" },
+              },
+            },
+            reason: {
+              type: "string",
+              description: "Reason for partner registration",
             },
           },
         },
