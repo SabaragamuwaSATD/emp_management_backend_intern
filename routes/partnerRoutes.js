@@ -56,11 +56,8 @@ router.post(
   ]),
   addPartner
 );
-
 router.get("/", getPartners);
-
 router.get("/:id", getPartnerById);
-
 router.delete("/:id", deletePartner);
 
 /**
