@@ -9,6 +9,7 @@ const empRoutes = require("./routes/empRoutes");
 const clientRoutes = require("./routes/clientRoutes");
 const partnerRoutes = require("./routes/partnerRoutes");
 const projectRoutes = require("./routes/projectRoutes");
+const incomeRoutes = require("./routes/incomeRoutes");
 
 app.use(cookieParser()); // for parsing cookies
 app.use(express.json()); // for parsing application/json
@@ -27,6 +28,7 @@ app.use("/api/v1/employees", empRoutes);
 app.use("/api/v1/clients", clientRoutes);
 app.use("/api/v1/partners", partnerRoutes);
 app.use("/api/v1/projects", projectRoutes);
+app.use("/api/v1/incomes", incomeRoutes);
 
 // Handle errors (404, etc.)
 app.use((req, res, next) => {

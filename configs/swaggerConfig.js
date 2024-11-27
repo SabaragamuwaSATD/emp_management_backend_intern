@@ -23,6 +23,10 @@ const options = {
         name: "Partner",
         description: "Endpoints related to partners",
       },
+      {
+        name: "Income",
+        description: "Endpoints related to income report",
+      },
     ],
     components: {
       schemas: {
@@ -194,6 +198,52 @@ const options = {
             reason: {
               type: "string",
               description: "Reason for partner registration",
+            },
+          },
+        },
+        schemas: {
+          Income: {
+            type: "object",
+            required: [
+              "incomeReportID",
+              "date",
+              "title",
+              "description",
+              "income",
+              "projectName",
+            ],
+            properties: {
+              incomeReportID: {
+                type: "string",
+                description: "Unique identifier for the income report",
+              },
+              report: {
+                type: "string",
+                format: "binary",
+                description: "Report file to upload",
+              },
+              date: {
+                type: "string",
+                format: "date",
+                description: "Date of the income report",
+              },
+              title: {
+                type: "string",
+                description: "Title of the income report",
+              },
+              description: {
+                type: "string",
+                description: "Detailed description of the income report",
+              },
+              income: {
+                type: "string",
+                description: "Income amount",
+              },
+              projectName: {
+                type: "string",
+                description:
+                  "ObjectId referencing the project in the Project collection",
+              },
             },
           },
         },
