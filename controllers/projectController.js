@@ -148,7 +148,6 @@ exports.deleteProject = async (req, res, next) => {
 };
 
 // search by project name
-
 exports.searchProject = async (req, res, next) => {
   try {
     const search = req.query.search;

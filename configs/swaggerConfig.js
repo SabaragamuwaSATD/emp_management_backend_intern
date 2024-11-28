@@ -201,49 +201,130 @@ const options = {
             },
           },
         },
-        schemas: {
-          Income: {
-            type: "object",
-            required: [
-              "incomeReportID",
-              "date",
-              "title",
-              "description",
-              "income",
-              "projectName",
-            ],
-            properties: {
-              incomeReportID: {
-                type: "string",
-                description: "Unique identifier for the income report",
+
+        Income: {
+          type: "object",
+          required: [
+            "incomeReportID",
+            "date",
+            "title",
+            "description",
+            "income",
+            "projectName",
+          ],
+          properties: {
+            incomeReportID: {
+              type: "string",
+              description: "Unique identifier for the income report",
+            },
+            report: {
+              type: "string",
+              format: "binary",
+              description: "Report file to upload",
+            },
+            date: {
+              type: "string",
+              format: "date",
+              description: "Date of the income report",
+            },
+            title: {
+              type: "string",
+              description: "Title of the income report",
+            },
+            description: {
+              type: "string",
+              description: "Detailed description of the income report",
+            },
+            income: {
+              type: "string",
+              description: "Income amount",
+            },
+            projectName: {
+              type: "string",
+              description:
+                "ObjectId referencing the project in the Project collection",
+            },
+          },
+        },
+        Cost: {
+          type: "object",
+          // required: ["costId", "date", "title", "reason", "cost"],
+          properties: {
+            costId: {
+              type: "string",
+              description: "Unique identifier for the cost report",
+            },
+            report: {
+              type: "object",
+              properties: {
+                url: {
+                  type: "string",
+                  description: "URL of the report file",
+                },
+                public_id: {
+                  type: "string",
+                  description: "Public ID of the report file in Cloudinary",
+                },
               },
-              report: {
-                type: "string",
-                format: "binary",
-                description: "Report file to upload",
+            },
+            date: {
+              type: "string",
+              format: "date",
+              description: "Date of the cost report",
+            },
+            title: {
+              type: "string",
+              description: "Title of the cost report",
+            },
+            reason: {
+              type: "string",
+              description: "Reason for the cost",
+            },
+            cost: {
+              type: "string",
+              description: "Cost amount",
+            },
+          },
+        },
+        Document: {
+          type: "object",
+          required: ["documentId", "documentName", "documentType", "noOfPage"],
+          properties: {
+            documentId: {
+              type: "string",
+              description: "Unique identifier for the document",
+            },
+            document: {
+              type: "object",
+              properties: {
+                url: {
+                  type: "string",
+                  description: "URL of the document file",
+                },
+                public_id: {
+                  type: "string",
+                  description: "Public ID of the document file in Cloudinary",
+                },
               },
-              date: {
-                type: "string",
-                format: "date",
-                description: "Date of the income report",
-              },
-              title: {
-                type: "string",
-                description: "Title of the income report",
-              },
-              description: {
-                type: "string",
-                description: "Detailed description of the income report",
-              },
-              income: {
-                type: "string",
-                description: "Income amount",
-              },
-              projectName: {
-                type: "string",
-                description:
-                  "ObjectId referencing the project in the Project collection",
-              },
+            },
+            documentName: {
+              type: "string",
+              description: "Name of the document",
+            },
+            documentType: {
+              type: "string",
+              enum: [
+                "Income",
+                "Cost",
+                "Agreement With Client",
+                "Agreement With Employee",
+                "Company",
+              ],
+              description: "Type of the document",
+            },
+            noOfPage: {
+              type: "string",
+              description: "Number of pages in the document",
             },
           },
         },
