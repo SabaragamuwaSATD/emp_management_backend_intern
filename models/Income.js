@@ -25,9 +25,13 @@ const incomeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  projectName: {
+  projectId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Project",
+    required: true,
+  },
+  projectName: {
+    type: String,
     required: true,
   },
   clientName: {
@@ -37,9 +41,9 @@ const incomeSchema = new mongoose.Schema({
 
 // Middleware to auto-fill clientName before saving
 incomeSchema.pre("save", async function (next) {
-  if (this.projectName) {
+  if (this.projectId) {
     const Project = mongoose.model("Project");
-    const project = await Project.findById(this.projectName);
+    const project = await Project.findById(this.projectId);
 
     if (project) {
       this.clientName = project.clientName;

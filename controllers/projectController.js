@@ -146,3 +146,27 @@ exports.deleteProject = async (req, res, next) => {
     next(error);
   }
 };
+
+// search by project name
+
+exports.searchProject = async (req, res, next) => {
+  try {
+    const search = req.query.search;
+    const projects = await Project.find({
+      projectName: { $regex: search, $options: "i" },
+    });
+
+    if (projects.length === 0) {
+      return res.status(404).json({
+        message: "Project Not Found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: projects,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

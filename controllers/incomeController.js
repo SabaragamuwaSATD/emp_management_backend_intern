@@ -12,6 +12,7 @@ exports.addIncomeReport = async (req, res, next) => {
     income,
     projectName,
     clientName,
+    projectId,
   } = req.body;
 
   if (!req.file) {
@@ -27,7 +28,8 @@ exports.addIncomeReport = async (req, res, next) => {
     !title ||
     !description ||
     !income ||
-    !projectName
+    !projectName ||
+    !projectId
   ) {
     return res.status(400).json({
       success: false,
@@ -51,6 +53,7 @@ exports.addIncomeReport = async (req, res, next) => {
       income,
       projectName,
       clientName,
+      projectId,
     });
 
     await newIncomeReport.save();
