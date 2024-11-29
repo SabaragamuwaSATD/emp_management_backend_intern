@@ -11,7 +11,7 @@ const projectSchema = new mongoose.Schema({
   },
   projectType: {
     type: String,
-    enum: ["frontend", "backend"],
+    enum: ["WEB", "POS"],
     required: true,
   },
   clientName: {
