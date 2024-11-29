@@ -12,6 +12,7 @@ const projectRoutes = require("./routes/projectRoutes");
 const incomeRoutes = require("./routes/incomeRoutes");
 const costRoutes = require("./routes/costRoutes");
 const documentRoutes = require("./routes/documentRoutes");
+const taskRoutes = require("./routes/taskRoutes");
 
 app.use(cookieParser()); // for parsing cookies
 app.use(express.json()); // for parsing application/json
@@ -33,6 +34,7 @@ app.use("/api/v1/projects", projectRoutes);
 app.use("/api/v1/incomes", incomeRoutes);
 app.use("/api/v1/costs", costRoutes);
 app.use("/api/v1/documents", documentRoutes);
+app.use("/api/v1/tasks", taskRoutes);
 
 // Handle errors (404, etc.)
 app.use((req, res, next) => {
