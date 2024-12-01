@@ -4,9 +4,17 @@ const { cloudinary } = require("../configs/cloudinaryConfig");
 
 // add task
 exports.addTask = async (req, res, next) => {
-  const { taskName, projectId, employeeId, assignDate, dueDate } = req.body;
+  const { taskId, taskName, projectId, employeeId, assignDate, dueDate } =
+    req.body;
 
-  if (!taskName || !projectId || !employeeId || !assignDate || !dueDate) {
+  if (
+    !taskId ||
+    !taskName ||
+    !projectId ||
+    !employeeId ||
+    !assignDate ||
+    !dueDate
+  ) {
     return res.status(400).json({
       message: "Required field/s missing",
     });
@@ -14,6 +22,7 @@ exports.addTask = async (req, res, next) => {
 
   try {
     const newTask = new Task({
+      taskId,
       taskName,
       projectId,
       employeeId,

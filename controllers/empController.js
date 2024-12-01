@@ -193,3 +193,29 @@ exports.deleteEmployee = async (req, res, next) => {
     next(error);
   }
 };
+
+//search by employee id
+
+exports.searchEmployee = async (req, res, next) => {
+  try {
+    const search = req.query.search;
+    const employee = await Employee.find({
+      name: { $regex: search, $options: "i" }, //search by name
+    });
+
+    if (employee.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No Employee found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Employee found",
+      data: employee,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
