@@ -58,6 +58,10 @@ const employeeSchema = new mongoose.Schema({
   endWorkDate: {
     type: Date,
   },
+  password: {
+    type: String,
+    required: false,
+  },
 });
 
 const Employee = mongoose.model("Employee", employeeSchema);

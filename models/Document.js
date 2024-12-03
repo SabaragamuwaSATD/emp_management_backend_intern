@@ -24,11 +24,16 @@ const documentSchema = new mongoose.Schema({
     ],
     required: true,
   },
+  dateTime: {
+    type: Date,
+    default: Date.now,
+    required: true,
+  },
   noOfPage: {
     type: String,
     required: true,
   },
 });
 
-const Document = new mongoose.model("Document", documentSchema);
+const Document = mongoose.model("Document", documentSchema);
 module.exports = Document;

@@ -13,6 +13,7 @@ const incomeRoutes = require("./routes/incomeRoutes");
 const costRoutes = require("./routes/costRoutes");
 const documentRoutes = require("./routes/documentRoutes");
 const taskRoutes = require("./routes/taskRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 app.use(cookieParser()); // for parsing cookies
 app.use(express.json()); // for parsing application/json
@@ -28,6 +29,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/employees", empRoutes);
+app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/clients", clientRoutes);
 app.use("/api/v1/partners", partnerRoutes);
 app.use("/api/v1/projects", projectRoutes);
