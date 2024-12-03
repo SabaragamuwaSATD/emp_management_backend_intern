@@ -34,6 +34,10 @@ exports.signup = async (req, res, next) => {
       return res.status(400).json({ message: "Please check the Employee ID!" });
     }
 
+    if (employee.password) {
+      return res.status(400).json({ message: "Employee already registered!" });
+    }
+
     employee.password = await hashPassword(password);
     await employee.save();
 
@@ -91,6 +95,19 @@ exports.signin = async (req, res, next) => {
       token,
       expiresIn,
       // data: employee,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+//Signout...............
+exports.signout = async (req, res, next) => {
+  try {
+    res.clearCookie("token");
+    res.status(200).json({
+      success: true,
+      message: "Signout successfully",
     });
   } catch (error) {
     next(error);
