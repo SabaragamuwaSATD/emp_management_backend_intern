@@ -5,6 +5,10 @@ const employeeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  email: {
+    type: String,
+    required: true,
+  },
   photo: {
     public_id: { type: String },
     url: { type: String },
@@ -59,6 +63,10 @@ const employeeSchema = new mongoose.Schema({
     type: Date,
   },
   password: {
+    type: String,
+    required: false,
+  },
+  otp: {
     type: String,
     required: false,
   },

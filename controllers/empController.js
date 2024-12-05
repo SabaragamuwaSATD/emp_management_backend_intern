@@ -7,6 +7,7 @@ exports.addEmployee = async (req, res, next) => {
   try {
     const {
       employeeId,
+      email,
       name,
       address,
       telNo,
@@ -26,6 +27,7 @@ exports.addEmployee = async (req, res, next) => {
 
     const newEmployee = new Employee({
       employeeId,
+      email,
       photo: {
         url: req.file.path,
         public_id: req.file.filename,

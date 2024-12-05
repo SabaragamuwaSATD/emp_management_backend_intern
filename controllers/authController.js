@@ -2,6 +2,11 @@ const Employee = require("../models/Employee");
 const jwt = require("jsonwebtoken");
 const hashPassword = require("../utills/hashPassword");
 const bcrypt = require("bcryptjs");
+// const { generateOTP, sendOTP } = require("../utills/otp");
+// const textflow = require("textflow.js");
+// const twilio = require("twilio");
+const dotenv = require("dotenv");
+dotenv.config();
 
 // Function to calculate the expiration time for the token
 const getExpirationTime = () => {
@@ -19,23 +24,33 @@ const getExpirationTime = () => {
 
 // Employee Sign Up
 exports.signup = async (req, res, next) => {
-  const { employeeId, password } = req.body;
+  const { email, name, telNo, password } = req.body;
 
-  if (!employeeId || !password) {
+  if (!email || !password) {
     return res
       .status(400)
-      .json({ message: "Please provide employeeId and password" });
+      .json({ message: "Please provide email and password" });
   }
 
   try {
-    const employee = await Employee.findOne({ employeeId });
+    const employee = await Employee.findOne({ email });
 
     if (!employee) {
-      return res.status(400).json({ message: "Please check the Employee ID!" });
+      return res.status(400).json({ message: "Please check the email!" });
     }
 
     if (employee.password) {
       return res.status(400).json({ message: "Employee already registered!" });
+    }
+
+    if (employee.name !== name) {
+      return res.status(400).json({ message: "Please check the Name!" });
+    }
+
+    if (employee.telNo !== telNo) {
+      return res
+        .status(400)
+        .json({ message: "Please check the Telephone Number!" });
     }
 
     employee.password = await hashPassword(password);
@@ -59,16 +74,16 @@ exports.signup = async (req, res, next) => {
 
 // Employee Sign In
 exports.signin = async (req, res, next) => {
-  const { employeeId, password } = req.body;
+  const { email, password } = req.body;
 
-  if (!employeeId || !password) {
+  if (!email || !password) {
     return res
       .status(400)
-      .json({ message: "Please provide employeeId and password" });
+      .json({ message: "Please provide email and password" });
   }
 
   try {
-    const employee = await Employee.findOne({ employeeId });
+    const employee = await Employee.findOne({ email });
 
     if (!employee) {
       return res.status(401).json({ message: "Invalid credentials" });
@@ -100,6 +115,97 @@ exports.signin = async (req, res, next) => {
     next(error);
   }
 };
+
+// Generate and send OTP
+// // Use your TextFlow API key
+// textflow.useKey(
+//   "2GzKpj2yDu1KZf0DQ8cp74TrTkIfrGIVXOSiQwwh55JxyGM9zyUJWGFsZ7dRAiyR"
+// );
+
+// // Generate and send OTP
+// exports.sendOtp = async (req, res, next) => {
+//   const { telNo } = req.body;
+
+//   try {
+//     // Generate OTP
+//     const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+//     // Send OTP using TextFlow
+//     let result = await textflow.sendSMS(telNo, `Your OTP code is ${otp}`);
+
+//     if (result.ok) {
+//       // Save OTP to the employee record (for demonstration purposes, you might want to use a more secure method)
+//       const employee = await Employee.findOneAndUpdate(
+//         { telNo },
+//         { otp },
+//         { new: true }
+//       );
+
+//       if (!employee) {
+//         return res.status(400).json({ message: "Employee not found" });
+//       }
+
+//       res.status(200).json({
+//         success: true,
+//         message: "OTP sent successfully",
+//         data: { telNo },
+//       });
+//     } else {
+//       console.error("Failed to send OTP:", result);
+//       res.status(500).json({ message: "Failed to send OTP" });
+//     }
+//   } catch (error) {
+//     console.error("Error sending OTP:", error);
+//     next(error);
+//   }
+// };
+
+// Use your Twilio credentials
+// const accountSid = process.env.TWILIO_ACCOUNT_SID;
+// const authToken = process.env.TWILIO_AUTH_TOKEN;
+// const client = new twilio(accountSid, authToken);
+
+// // Generate and send OTP
+// exports.sendOtp = async (req, res, next) => {
+//   const { telNo } = req.body;
+
+//   try {
+//     // Generate OTP
+//     const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+//     // Send OTP using Twilio
+//     const message = await client.messages.create({
+//       body: `Your OTP code is ${otp}`,
+//       from: "+940701012293", // Replace with your Twilio phone number
+//       to: telNo,
+//     });
+
+//     if (message.sid) {
+//       // Save OTP to the employee record (for demonstration purposes, you might want to use a more secure method)
+//       const employee = await Employee.findOneAndUpdate(
+//         { telNo },
+//         { otp },
+//         { new: true }
+//       );
+
+//       if (!employee) {
+//         return res.status(400).json({ message: "Employee not found" });
+//       }
+
+//       res.status(200).json({
+//         success: true,
+//         message: "OTP sent successfully",
+//         data: { telNo },
+//       });
+//     } else {
+//       console.error("Failed to send OTP:", message);
+//       res.status(500).json({ message: "Failed to send OTP" });
+//     }
+//   } catch (error) {
+//     console.error("Error sending OTP:", error);
+//     next(error);
+//   }
+// };
 
 //Signout...............
 exports.signout = async (req, res, next) => {
