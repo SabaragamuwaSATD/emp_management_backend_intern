@@ -1,11 +1,9 @@
 const Employee = require("../models/Employee");
 const jwt = require("jsonwebtoken");
-const hashPassword = require("../utills/hashPassword");
 const bcrypt = require("bcryptjs");
-// const { generateOTP, sendOTP } = require("../utills/otp");
-// const textflow = require("textflow.js");
-// const twilio = require("twilio");
 const dotenv = require("dotenv");
+const crypto = require("crypto");
+const { sendOTPEmail } = require("../utills/emailService");
 dotenv.config();
 
 // Function to calculate the expiration time for the token
@@ -20,56 +18,6 @@ const getExpirationTime = () => {
 
   const expiresIn = Math.floor((expiration - now) / 1000); // Calculate the difference in seconds
   return expiresIn;
-};
-
-// Employee Sign Up
-exports.signup = async (req, res, next) => {
-  const { email, name, telNo, password } = req.body;
-
-  if (!email || !password) {
-    return res
-      .status(400)
-      .json({ message: "Please provide email and password" });
-  }
-
-  try {
-    const employee = await Employee.findOne({ email });
-
-    if (!employee) {
-      return res.status(400).json({ message: "Please check the email!" });
-    }
-
-    if (employee.password) {
-      return res.status(400).json({ message: "Employee already registered!" });
-    }
-
-    if (employee.name !== name) {
-      return res.status(400).json({ message: "Please check the Name!" });
-    }
-
-    if (employee.telNo !== telNo) {
-      return res
-        .status(400)
-        .json({ message: "Please check the Telephone Number!" });
-    }
-
-    employee.password = await hashPassword(password);
-    await employee.save();
-
-    // const expiresIn = getExpirationTime();
-    // const token = jwt.sign({ id: employee._id }, process.env.JWT_SECRET, {
-    //   expiresIn,
-    // });
-
-    res.status(200).json({
-      success: true,
-      message: "Employee Registered successfully",
-      // token,
-      data: employee,
-    });
-  } catch (error) {
-    next(error);
-  }
 };
 
 // Employee Sign In
@@ -116,97 +64,6 @@ exports.signin = async (req, res, next) => {
   }
 };
 
-// Generate and send OTP
-// // Use your TextFlow API key
-// textflow.useKey(
-//   "2GzKpj2yDu1KZf0DQ8cp74TrTkIfrGIVXOSiQwwh55JxyGM9zyUJWGFsZ7dRAiyR"
-// );
-
-// // Generate and send OTP
-// exports.sendOtp = async (req, res, next) => {
-//   const { telNo } = req.body;
-
-//   try {
-//     // Generate OTP
-//     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-//     // Send OTP using TextFlow
-//     let result = await textflow.sendSMS(telNo, `Your OTP code is ${otp}`);
-
-//     if (result.ok) {
-//       // Save OTP to the employee record (for demonstration purposes, you might want to use a more secure method)
-//       const employee = await Employee.findOneAndUpdate(
-//         { telNo },
-//         { otp },
-//         { new: true }
-//       );
-
-//       if (!employee) {
-//         return res.status(400).json({ message: "Employee not found" });
-//       }
-
-//       res.status(200).json({
-//         success: true,
-//         message: "OTP sent successfully",
-//         data: { telNo },
-//       });
-//     } else {
-//       console.error("Failed to send OTP:", result);
-//       res.status(500).json({ message: "Failed to send OTP" });
-//     }
-//   } catch (error) {
-//     console.error("Error sending OTP:", error);
-//     next(error);
-//   }
-// };
-
-// Use your Twilio credentials
-// const accountSid = process.env.TWILIO_ACCOUNT_SID;
-// const authToken = process.env.TWILIO_AUTH_TOKEN;
-// const client = new twilio(accountSid, authToken);
-
-// // Generate and send OTP
-// exports.sendOtp = async (req, res, next) => {
-//   const { telNo } = req.body;
-
-//   try {
-//     // Generate OTP
-//     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-//     // Send OTP using Twilio
-//     const message = await client.messages.create({
-//       body: `Your OTP code is ${otp}`,
-//       from: "+940701012293", // Replace with your Twilio phone number
-//       to: telNo,
-//     });
-
-//     if (message.sid) {
-//       // Save OTP to the employee record (for demonstration purposes, you might want to use a more secure method)
-//       const employee = await Employee.findOneAndUpdate(
-//         { telNo },
-//         { otp },
-//         { new: true }
-//       );
-
-//       if (!employee) {
-//         return res.status(400).json({ message: "Employee not found" });
-//       }
-
-//       res.status(200).json({
-//         success: true,
-//         message: "OTP sent successfully",
-//         data: { telNo },
-//       });
-//     } else {
-//       console.error("Failed to send OTP:", message);
-//       res.status(500).json({ message: "Failed to send OTP" });
-//     }
-//   } catch (error) {
-//     console.error("Error sending OTP:", error);
-//     next(error);
-//   }
-// };
-
 //Signout...............
 exports.signout = async (req, res, next) => {
   try {
@@ -214,6 +71,117 @@ exports.signout = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Signout successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+//forgot password.......................
+exports.ForgotPassword = async (req, res, next) => {
+  const { email } = req.body;
+
+  // Generate a random OTP (6 digits)
+  const generateOTP = () => {
+    return Math.floor(100000 + Math.random() * 900000); // 6-digit OTP
+  };
+
+  try {
+    const user = await Employee.findOne({ email });
+    if (!user) return next(errorHandler(404, "User not found"));
+
+    // Generate OTP
+    const otp = generateOTP();
+
+    // Hash the OTP and save to the user (for security reasons)
+    const hashedOTP = crypto
+      .createHash("sha256")
+      .update(otp.toString())
+      .digest("hex");
+    user.resetPasswordOTP = hashedOTP;
+    user.resetPasswordExpires = Date.now() + 3600000; // OTP expires in 1 hour
+    user.otpVerified = false;
+    await user.save();
+
+    // Send OTP via email
+    await sendOTPEmail(user.email, otp);
+
+    res.status(200).json({
+      success: true,
+      data: user,
+      message: "OTP sent to email for password reset",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// otp verificaton...............................
+exports.VerifyOTP = async (req, res, next) => {
+  const { otp } = req.body;
+
+  try {
+    // Hash the provided OTP to compare it with the stored hashed OTP
+    const hashedOTP = crypto
+      .createHash("sha256")
+      .update(otp.toString())
+      .digest("hex");
+
+    // Find the user by OTP and check its validity
+    const user = await Employee.findOne({
+      resetPasswordOTP: hashedOTP,
+      resetPasswordExpires: { $gt: Date.now() }, // Check if OTP is still valid
+    });
+
+    if (!user) {
+      console.log(hashedOTP);
+      // console.log(resetPasswordExpires);
+      return res.status(400).json({ message: "Invalid or expired OTP" });
+    }
+
+    // Flag the user as OTP verified (e.g., add a field in the database)
+    user.otpVerified = true;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      data: user,
+      message: "OTP verified successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+//reset password...............................
+exports.ResetPassword = async (req, res, next) => {
+  const { newPassword } = req.body;
+
+  try {
+    // Find the user based on the resetPasswordOTP and check OTP expiry
+    const user = await Employee.findOne({
+      otpVerified: true,
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "OTP verfied required" });
+    }
+
+    // Hash the new password and update the user's password
+    const hashedPassword = bcrypt.hashSync(newPassword, 10);
+    user.password = hashedPassword;
+
+    // Clear the OTP and expiry fields
+    user.resetPasswordOTP = undefined;
+    user.resetPasswordExpires = undefined;
+    user.otpVerified = false;
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      data: user,
+      message: "password has been reset successfully",
     });
   } catch (error) {
     next(error);

@@ -66,9 +66,11 @@ const employeeSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  otp: {
-    type: String,
-    required: false,
+  resetPasswordOTP: { type: String }, // For storing hashed token
+  resetPasswordExpires: { type: Date },
+  otpVerified: {
+    type: Boolean,
+    default: false,
   },
 });
 
