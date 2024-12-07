@@ -19,7 +19,7 @@ app.use(cookieParser()); // for parsing cookies
 app.use(express.json()); // for parsing application/json
 app.use(bodyParser.json()); // for parsing json bodies
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-app.use(cors({ origin: "http://localhost:5174" })); // for enabling CORS for all requests
+app.use(cors({ origin: "http://localhost:5173" })); // for enabling CORS for all requests
 app.use(morgan("dev")); // for logging requests
 
 setupSwagger(app);

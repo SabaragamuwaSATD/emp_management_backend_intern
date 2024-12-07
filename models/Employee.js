@@ -41,6 +41,10 @@ const employeeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  bankBranch: {
+    type: String,
+    required: true,
+  },
   jobRole: {
     type: String,
     required: true,
@@ -59,9 +63,9 @@ const employeeSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  endWorkDate: {
-    type: Date,
-  },
+  // endWorkDate: {
+  //   type: Date,
+  // },
   password: {
     type: String,
     required: false,
