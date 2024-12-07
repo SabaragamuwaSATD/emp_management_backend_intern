@@ -13,6 +13,10 @@ const clientSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  clientEmail: {
+    type: String,
+    required: true,
+  },
   clientAddress: {
     type: String,
     required: true,
@@ -37,7 +41,15 @@ const clientSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  bankBranch: {
+    type: String,
+    required: true,
+  },
   companyName: {
+    type: String,
+    required: true,
+  },
+  companyEmail: {
     type: String,
     required: true,
   },
